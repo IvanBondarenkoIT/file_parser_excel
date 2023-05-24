@@ -1,6 +1,7 @@
 import pandas as pd
 import openpyxl
 import csv
+import data_manager as dm
 
 
 # Example usage
@@ -67,9 +68,16 @@ def read_excel_line_by_line(file_path, sheet_name):
 def main():
     # for row in read_excel_line_by_line(EXCEL_FILE_PATH, SHEET_NAME):
     #     write_csv(CSV_FILE_PATH, row)
-    read_xlsx(EXCEL_FILE_PATH)
-    df = pd.DataFrame(read_xlsx(EXCEL_FILE_PATH))
+    # read_xlsx(EXCEL_FILE_PATH)
+    data_interpreter = dm.DataUnit()
+    for i in read_xlsx(EXCEL_FILE_PATH):
+        print(i)
+        data_interpreter.add_data(i)
+
+    df = pd.DataFrame(data_interpreter.get_final_values())
     df.to_csv("result_csv_file.csv")
+
+
 
 
 if __name__ == '__main__':
