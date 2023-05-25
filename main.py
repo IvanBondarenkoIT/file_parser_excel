@@ -3,6 +3,7 @@ import data_manager as dm
 
 
 CSV_FILE_PATH = 'result_csv_file.csv'
+NO_VALID_FILE_PATH = "not_valid_data.csv"
 EXCEL_FILE_PATH = 'data.xlsx'
 SHEET_NAME = 'Basic Worksheet'
 
@@ -19,11 +20,11 @@ def main():
         print(record)
         data_interpreter.add_data(record)
 
-    df = pd.DataFrame(data_interpreter.get_final_values())
+    df = pd.DataFrame(data_interpreter.get_final_values)
     df.to_csv(CSV_FILE_PATH, index=False)
 
-    df = pd.DataFrame(data_interpreter.get_not_valid_data())
-    df.to_csv("not_valid_data.csv", index=False, header=False)
+    df = pd.DataFrame(data_interpreter.get_not_valid_data)
+    df.to_csv(NO_VALID_FILE_PATH, index=False, header=False)
 
 
 if __name__ == '__main__':

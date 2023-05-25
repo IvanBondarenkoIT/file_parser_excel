@@ -3,13 +3,13 @@ import re
 VALIDATION_PATTERNS = {
     "First Name": r'[A-Za-z]+',
     "Last Name": r'[A-Za-z]+',
-    "SSN": r'\d{3}-\d{2}-\d{4}',
+    "SSN": r'\d{3}-?\d{2}-?\d{4}',
     "Address": r'.+',
     "Company": r'.+',
     "Department": r'.+',
     "Position": r'.+',
-    "Zip": r'\d{5}(-\d{4})?',
-    "tel": r'\d?-?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}',
+    "Zip": r'\d{2,5}-?(\d{4})?',
+    "Mobile number": r'\d?-?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}',
 }
 
 
@@ -26,25 +26,31 @@ class DataInterpreter:
             "address": self.validate("Address"),
             "user_fullname": f'{self.validate("First Name")} '
                              f'{self.validate("Last Name")}',
-            "user_additional_info": f'{self.validate("SSN")}|'
-                                    f'{self.validate("Company")}|'
-                                    f'{self.validate("Department")}|'
-                                    f'{self.validate("Position")}|',
-
+            "user_additional_info": self.build_user_additional_info("SSN", "Company", "Department","Position"),
             "zip": self.validate("Zip"),
             "tel": self.validate("Mobile number"),
             })
 
     def validate(self, kay):
         """Return valid values or empty string"""
-        if re.match(pattern=r'[A-Za-z]+', string=str(self.__current_row.get(kay))):
+        if re.match(pattern=VALIDATION_PATTERNS.get(kay), string=str(self.__current_row.get(kay))):
             return self.__current_row.get(kay)
         else:
-            self.__not_valid_data.append(self.__current_row.get(kay))
+            self.__not_valid_data.append(f"{self.__current_row.get(kay)}")
             return ""
 
+    def build_user_additional_info(self, *args):
+        result = []
+        for arg in args:
+            validate_data = self.validate(arg)
+            if validate_data:
+                result.append(validate_data)
+        return "|".join(result)
+
+    @property
     def get_final_values(self):
         return self.__result_dict
 
+    @property
     def get_not_valid_data(self):
         return self.__not_valid_data
