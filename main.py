@@ -16,8 +16,8 @@ def read_xlsx(filename: str):
 
 def main():
     data_interpreter = dm.DataInterpreter()
+
     for record in read_xlsx(EXCEL_FILE_PATH):
-        print(record)
         data_interpreter.add_data(record)
 
     df = pd.DataFrame(data_interpreter.get_final_values)
